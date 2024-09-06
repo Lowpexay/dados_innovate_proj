@@ -50,6 +50,8 @@ Além do arquivo `app.py`, o projeto **dados_innovate_proj** também possui os s
 
 - `requirements.txt`: Este arquivo lista as dependências do projeto. É utilizado pelo comando `pip install -r requirements.txt` para instalar as bibliotecas necessárias.
 
+link do projeto: https://innovateitdata.streamlit.app
+
 ## Contribuição
 
 Se você deseja contribuir para o projeto **dados_innovate_proj**, siga as etapas abaixo:
