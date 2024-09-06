@@ -204,6 +204,8 @@ from jose import jwt
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status
 
+st.set_page_config(page_title="Controle de Gastos - Gráficos", page_icon="📊")
+
 # Configurações de segurança para JWT
 SECRET_KEY = "YOUR_SECRET_KEY"  # Substitua por uma chave secreta forte
 ALGORITHM = "HS256"
