@@ -1,5 +1,7 @@
 # dados_innovate_proj
 
+Esse projeto é relacionado ao repositório: https://github.com/Mikael139/sistema_de_gestao
+
 Este é o repositório do projeto **dados_innovate_proj**.
 
 ## Descrição
