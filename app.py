@@ -276,6 +276,7 @@ def authenticate_user(db, username, password):
         return None
     return user
 
+
 # Tela de login e registro
 def login_page():
     st.title("Tela de Login 🔐")
@@ -352,13 +353,17 @@ def main_page():
     gastos_agrupados.columns = ["Descrição", "Total Gasto", "Quantidade"]
 
     # Criar uma variável para o valor de dinheiro do mês da empresa
-    valor_total_mes = 100000  # Exemplo de valor total disponível no mês
+    valor_total_mes = 50000  # Exemplo de valor total disponível no mês
 
     # Calcular a porcentagem de gasto em relação ao valor total disponível
     gastos_agrupados["Porcentagem do Total"] = (gastos_agrupados["Total Gasto"] / valor_total_mes) * 100
 
     # Criar abas
     tab1, tab2, tab3, tab4 = st.tabs(["Gráficos", "Lista de Gastos", "Resumo Financeiro", "Registro de Clientes"])
+
+    def filtrar_dataframe(df, pesquisa):
+        return df[df.apply(lambda row: row.astype(str).str.contains(pesquisa, case=False).any(), axis=1)]
+    
 
     # Aba de gráficos
     with tab1:
@@ -375,21 +380,38 @@ def main_page():
     # Aba de lista de gastos
     with tab2:
         st.subheader("Lista de Gastos Agrupados")
-        st.dataframe(gastos_agrupados)
+        pesquisa_gastos = st.text_input("Pesquisar Gastos")
+        gastos_filtrados = filtrar_dataframe(gastos_agrupados, pesquisa_gastos)
+        st.dataframe(gastos_filtrados)
 
     # Aba de resumo financeiro
     with tab3:
+        valor_total_mes = st.number_input("Valor Total Disponível no Mês", value=valor_total_mes)
         st.subheader("Resumo Financeiro")
         total_gasto = gastos_agrupados["Total Gasto"].sum()
         porcentagem_gasto = (total_gasto / valor_total_mes) * 100
+
+        # Definir limites para as cores
+        limite_perto = 90  # 90% ou mais é considerado "perto"
+        limite_longe = 50  # 50% ou menos é considerado "longe"
+
+        # Determinar a cor com base na porcentagem de gasto
+        if porcentagem_gasto >= limite_perto:
+            cor = "red"
+        elif porcentagem_gasto <= limite_longe:
+            cor = "green"
+        else:
+            cor = "orange"
+
         st.metric(label="Valor Total Disponível no Mês", value=f"R${valor_total_mes:,.2f}")
         st.metric(label="Total Gasto", value=f"R${total_gasto:,.2f}")
-        st.metric(label="Porcentagem de Gasto", value=f"{porcentagem_gasto:.2f}%")
+        st.markdown(f"<span style='color:{cor}'>Porcentagem de Gasto: {porcentagem_gasto:.2f}%</span>", unsafe_allow_html=True)
 
     with tab4:
         st.header("Clientes")
-        # Exibir dados em uma tabela formatada
-        st.dataframe(df_clientes)
+        pesquisa_clientes = st.text_input("Pesquisar Clientes")
+        clientes_filtrados = filtrar_dataframe(df_clientes, pesquisa_clientes)
+        st.dataframe(clientes_filtrados)
 
 # Verificar se o usuário está logado
 if "logged_in" not in st.session_state or not st.session_state["logged_in"]:
